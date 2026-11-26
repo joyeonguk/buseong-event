@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>부성클럽 이벤트 매치</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap">
+<style>
+/* VOICE occasion: a club party, played like an arcade sports game
+   IDEA the stage-select screen of a badminton video game, with a live gym court
+   PICTURE a wood-floored court in a game housing; players and shuttles move by each stage's real rules
+   COLOUR deep court green ground, white lines, lime shuttle accent, sky team A, coral team B
+   TYPE Black Han Sans display + Noto Sans KR text
+   LAYOUT laptop: title row, three stage buttons, court left with rules and live score right; phone: title, stages, court, rules, score */
+:root{color-scheme:dark;--bg:#0f2e22;--panel:#16402f;--panel2:#1c4d39;--ink:#f4f1e8;--soft:#b9d3c4;--lime:#d8f34a;--a:#5cc8ff;--b:#ff6a4d;--line:rgba(244,241,232,.16)}
+:root[data-theme=light]{color-scheme:dark}:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--bg)}
+body{color:var(--ink);font:16px/1.55 'Noto Sans KR',Arial,sans-serif;overflow-x:clip}
+h1,h2,h3,.disp{font-family:'Black Han Sans','Noto Sans KR',Arial,sans-serif;font-weight:400;margin:0;letter-spacing:-.01em}
+.wrap{max-width:1240px;margin:0 auto;padding:0 max(16px,4vw)}
+header{padding:28px 0 18px;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:18px;align-items:end}
+h1{font-size:clamp(32px,5vw,52px);line-height:1.05;text-wrap:balance}
+h1 span{color:var(--lime)}
+.lead{margin:8px 0 0;color:var(--soft)}
+.teams{display:flex;gap:10px;flex-wrap:wrap}
+.teams label{display:flex;align-items:center;gap:8px;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:6px 10px;font-weight:700;font-size:14px;color:var(--soft)}
+.teams input{width:7.5em;font:700 16px 'Noto Sans KR',Arial,sans-serif;color:var(--ink);background:transparent;border:0;border-bottom:2px solid var(--line);padding:4px 2px;min-height:36px}
+.teams input:focus{outline:none;border-color:var(--lime)}
+.chip{display:inline-block;width:16px;height:16px;border-radius:50%;border:3px solid var(--bg);box-shadow:0 0 0 2px var(--ink);flex:none}
+.chip.a{background:var(--a)}.chip.b{background:var(--b)}
+nav{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:18px}
+nav button{all:unset;cursor:pointer;background:var(--panel);border:3px solid var(--line);border-radius:18px;padding:14px 18px;display:grid;gap:2px;transition:transform .15s,border-color .15s,background .15s;min-height:44px}
+nav button:hover{transform:translateY(-2px);border-color:var(--soft)}
+nav button:focus-visible{outline:3px solid var(--lime);outline-offset:3px}
+nav button[aria-selected=true]{background:var(--lime);border-color:var(--lime);color:var(--bg)}
+nav .lv{font:700 13px 'Noto Sans KR',Arial,sans-serif;opacity:.8}
+nav .nm{font-family:'Black Han Sans','Noto Sans KR',Arial,sans-serif;font-size:clamp(18px,2.4vw,28px);line-height:1.1}
+nav .tg{font-size:14px;opacity:.85}
+main{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:18px;align-items:start}
+.arena{position:relative;border-radius:26px;background:#3b2614;padding:10px;box-shadow:0 0 0 4px #0a2219,0 18px 0 -6px #0a2219}
+.arena svg{display:block;width:100%;height:auto;border-radius:18px}
+.hud{position:absolute;left:22px;top:22px;background:rgba(15,46,34,.9);color:var(--lime);font:900 16px 'Noto Sans KR',Arial,sans-serif;padding:8px 14px;border-radius:999px;border:2px solid var(--lime)}
+.hud.win{background:var(--lime);color:var(--bg);animation:pop .5s ease-out}
+.legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 4px 0;color:var(--soft);font-size:14px;align-items:center}
+.legend b{color:var(--ink)}
+.legend span{display:flex;align-items:center;gap:8px}
+.side{display:grid;gap:18px}
+.card{background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:20px 22px}
+.card h2{font-size:32px;line-height:1.05}
+.card h3{font-size:20px;color:var(--lime)}
+dl{display:grid;grid-template-columns:5.2em minmax(0,1fr);gap:0;margin:14px 0 0}
+dt,dd{margin:0;padding:10px 0;border-top:1px solid var(--line)}
+dt{color:var(--lime);font-weight:700;font-size:15px}
+dd b{background:var(--lime);color:var(--bg);padding:0 6px;border-radius:4px}
+.vid{display:flex;align-items:center;gap:12px;margin-top:14px;background:var(--ink);color:var(--bg);text-decoration:none;font-weight:900;border-radius:14px;padding:10px 14px;min-height:44px}
+.vid:hover{background:var(--lime)}
+.vid svg{flex:none}
+.vid small{display:block;font-weight:400;font-size:13px}
+.sbh{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:12px}
+.reset{all:unset;cursor:pointer;font-size:14px;color:var(--soft);border:2px solid var(--line);border-radius:10px;padding:6px 12px}
+.reset:hover,.reset:focus-visible{color:var(--ink);border-color:var(--ink)}
+.duel{display:grid;grid-template-columns:minmax(0,1fr) auto minmax(0,1fr);gap:10px;align-items:center;text-align:center}
+.tm{font-weight:700;font-size:15px;overflow-wrap:anywhere}
+.tm.a{color:var(--a)}.tm.b{color:var(--b)}
+.big{font-family:'Black Han Sans','Noto Sans KR',Arial,sans-serif;font-size:clamp(56px,7vw,80px);line-height:1;font-variant-numeric:tabular-nums}
+.vs{color:var(--soft);font-size:14px;white-space:nowrap}
+.pm{display:flex;gap:8px;justify-content:center;margin-top:8px}
+.pm button,.mini button{all:unset;cursor:pointer;min-width:44px;height:44px;border-radius:12px;background:var(--panel2);border:2px solid var(--line);text-align:center;font:900 18px 'Noto Sans KR',Arial,sans-serif;line-height:40px}
+.pm button.up{background:var(--lime);color:var(--bg);border-color:var(--lime)}
+.pm button:active,.mini button:active{transform:scale(.94)}
+.pm button:focus-visible,.mini button:focus-visible,.pair:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+.banner{margin-top:14px;text-align:center;background:var(--lime);color:var(--bg);font:400 24px 'Black Han Sans','Noto Sans KR',Arial,sans-serif;border-radius:14px;padding:10px;animation:pop .5s ease-out}
+.note{margin:12px 0 0;color:var(--soft);font-size:14px;text-align:center}
+.mrow{display:grid;grid-template-columns:3.2em minmax(0,1fr) auto minmax(0,1fr);gap:8px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.mrow .lab{font-weight:700;color:var(--soft);font-size:14px}
+.mini{display:flex;align-items:center;justify-content:center;gap:6px}
+.mini button{min-width:36px;height:36px;line-height:32px;font-size:16px}
+.mini .n{font-family:'Black Han Sans','Noto Sans KR',Arial,sans-serif;font-size:30px;width:1.4em;text-align:center;font-variant-numeric:tabular-nums}
+.mrow.done .lab{color:var(--lime)}
+.colon{color:var(--soft)}
+.prow{padding:10px 0;border-top:1px solid var(--line)}
+.prow .tm{text-align:left;margin-bottom:8px;display:flex;justify-content:space-between}
+.pairs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.pair{all:unset;cursor:pointer;text-align:center;border:2px dashed var(--line);border-radius:12px;min-height:52px;font-size:13px;color:var(--soft);display:grid;place-content:center;line-height:1.25}
+.pair.ok{border-style:solid;color:var(--bg);font-weight:900}
+.pair.ok.a{background:var(--a);border-color:var(--a)}.pair.ok.b{background:var(--b);border-color:var(--b)}
+.safety{margin:28px 0 0;background:var(--lime);color:var(--bg)}
+.safety .wrap{display:grid;grid-template-columns:auto repeat(3,minmax(0,1fr));gap:24px;padding-top:26px;padding-bottom:26px;align-items:start}
+.safety h2{font-size:32px;line-height:1.05}
+.safety h3{font-size:20px}
+.safety p{margin:4px 0 0;font-size:15px}
+footer{padding:18px 0 30px;color:var(--soft);font-size:13px}
+.tok .body{transform-box:fill-box;transform-origin:center}
+.tok .body.hit{animation:pop .35s ease-out}
+@keyframes pop{50%{transform:scale(1.22)}}
+.roster{margin-bottom:22px}
+.rhead{display:flex;align-items:baseline;gap:14px;flex-wrap:wrap;margin-bottom:12px}
+.rhead h2{font-size:32px;line-height:1.05}
+.rhead p{margin:0;color:var(--soft);font-size:15px}
+.rteams{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.team{background:var(--panel);border:2px solid var(--line);border-radius:20px;overflow:hidden}
+.thd{padding:12px 20px;display:flex;justify-content:space-between;align-items:baseline;gap:10px;flex-wrap:wrap;color:var(--bg)}
+.team.a .thd{background:var(--a)}
+.team.b .thd{background:var(--b)}
+.thd h3{font-size:28px;line-height:1.1;color:var(--bg)}
+.thd span{font-size:14px;font-weight:700}
+.mem{list-style:none;margin:0;padding:6px 20px 14px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:22px}
+.mem li{display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)}
+.mem b{font-size:17px;white-space:nowrap}
+@media(max-width:720px){.rteams{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:980px){main{grid-template-columns:minmax(0,1fr)}.side{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:720px){.safety .wrap{grid-template-columns:repeat(3,minmax(0,1fr))}.safety h2{grid-column:1/-1}}
+@media(max-width:600px){header{grid-template-columns:minmax(0,1fr)}.side{grid-template-columns:minmax(0,1fr)}nav{gap:8px}nav button{padding:10px}nav .tg{display:none}.safety .wrap{grid-template-columns:minmax(0,1fr)}.hud{position:static;display:block;text-align:center;margin-top:8px;border-radius:12px;font-size:14px;padding:6px 10px}.teams{flex-wrap:nowrap}.teams label{flex:1;padding:6px 8px;gap:6px;white-space:nowrap}.teams input{width:100%}.rhead h2{font-size:28px}.thd{padding:10px 16px}.thd h3{font-size:24px}.mem{grid-template-columns:repeat(3,minmax(0,1fr));column-gap:12px;padding:4px 16px 10px}.mem li{padding:7px 0}.mem b{font-size:16px}.arena{padding:6px;border-radius:18px}.arena svg{border-radius:12px}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<div>
+<h1>부성클럽 창립기념 <span>이벤트 매치</span></h1>
+<p class="lead">세 가지 스테이지의 규칙을 보고, 경기 점수도 여기서 바로 기록하세요.</p>
+</div>
+<div class="teams">
+<label><span class="chip a"></span>팀 1 <input id="nameA" maxlength="10" aria-label="첫째 팀 이름"></label>
+<label><span class="chip b"></span>팀 2 <input id="nameB" maxlength="10" aria-label="둘째 팀 이름"></label>
+</div>
+</header>
+<section class="roster" aria-labelledby="rt">
+<div class="rhead"><h2 id="rt">팀 구성</h2><p>총무팀 vs 회장팀</p></div>
+<div class="rteams" id="rteams"></div>
+</section>
+<nav id="stages" role="tablist" aria-label="이벤트 경기 선택"></nav>
+<main>
+<section>
+<div class="arena"><svg id="court" viewBox="-60 -60 1460 730" role="img" aria-label="경기 코트 애니메이션"></svg><div class="hud" id="hud" aria-live="polite"></div></div>
+<div class="legend" id="legend"></div>
+</section>
+<div class="side">
+<div class="card" id="rules"></div>
+<div class="card" id="board"></div>
+</div>
+</main>
+</div>
+<section class="safety">
+<div class="wrap">
+<h2>안전하게,<br>즐겁게!</h2>
+<div><h3>주변 정리</h3><p>코트 주변의 가방과 의자를 치우고, 앉아민턴 구역에는 매트를 깔아 주세요.</p></div>
+<div><h3>3초 멈춤</h3><p>코끼리코를 돈 뒤에는 진행자 신호에 맞춰 3초 멈췄다가 랠리를 시작해요.</p></div>
+<div><h3>“마이!” 콜</h3><p>더블셔틀 경기에서는 칠 사람이 먼저 외쳐서 서로 부딪치지 않게 해요.</p></div>
+</div>
+</section>
+<div class="wrap"><footer>참고 영상은 YouTube에서 열립니다. 점수는 이 화면을 연 브라우저에만 저장됩니다.</footer></div>
+<script>
+{
+const S=[
+{id:'stage1',lv:'STAGE 1',nm:'앉아민턴',tg:'9 vs 9 · 21점 단판',title:'앉아민턴 9 vs 9',
+ rules:[['인원','팀당 <b>9명</b> 출전 (9 vs 9)'],['방식','바닥에 앉은 자세로만 경기'],['점수','<b>21점</b> 단판 경기'],['교체','경기 중 언제든 자유롭게 교체'],['코트','복식 코트를 <b>9구역</b>으로 표시, 구역마다 1명']],
+ vid:['참고 영상','배드민턴클럽 창립총회 ‘앉아서 하는 게임’','https://www.youtube.com/watch?v=NjUr9V6B8_M'],hud:'앉아서 랠리 중 · 21점 단판'},
+{id:'stage2',lv:'STAGE 2',nm:'더블셔틀 3:3',tg:'셔틀콕 2개 · 8점 단세트',title:'더블셔틀 3 vs 3',
+ rules:[['인원','3인 1조, 팀당 <b>3조</b> 출전 (3복식)'],['포지션','1번 전위 중앙 · 2번 오른쪽 뒤 · 3번 왼쪽 뒤'],['시작','진행자 수신호에 맞춰 양 팀 1번이 상대 1번에게 동시 서브'],['득점','셔틀콕 <b>2개 모두</b> 득점해야 1점'],['세트','<b>8점</b> 단세트']],
+ vid:null,hud:'셔틀콕 2개 동시 진행'},
+{id:'stage3',lv:'STAGE 3',nm:'코끼리코 민턴',tg:'6바퀴 + 랠리 5회',title:'코끼리코 민턴',
+ rules:[['인원','2인 1조, 팀당 <b>5조</b> 출전'],['방법','코끼리코 <b>6바퀴</b> 돈 뒤 바로 랠리'],['성공','랠리를 <b>5회 이상</b> 이어가면 성공'],['승리','성공한 조가 더 많은 팀 승리']],
+ vid:['참고 영상','코끼리코 민턴 경기 예시','https://www.youtube.com/watch?v=n4K9OSSYd14'],hud:'코끼리코 준비'}
+];
+const fresh=()=>({stage:0,names:['총무팀','회장팀'],s1:[0,0],s2:[[0,0],[0,0],[0,0]],s3:[[0,0,0,0,0],[0,0,0,0,0]]});
+let st=fresh();
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const $=id=>document.getElementById(id);
+const still=matchMedia('(prefers-reduced-motion: reduce)').matches;
+const save=()=>{try{localStorage.setItem('buseong-match-v2',JSON.stringify(st))}catch(e){}};
+const rows=[102,305,508],cA=[112,335,558],cB=[1228,1005,782];
+const Z1A=[],Z1B=[];
+rows.forEach((y,r)=>{for(let c=0;c<3;c++){Z1A.push({x:cA[c],y,n:r*3+c+1});Z1B.push({x:cB[c],y,n:r*3+c+1})}});
+const P2A=[{x:540,y:305,n:1},{x:150,y:470,n:2},{x:150,y:140,n:3}],P2B=[{x:800,y:305,n:1},{x:1190,y:140,n:2},{x:1190,y:470,n:3}];
+const P3A=[{x:420,y:305,n:'A'}],P3B=[{x:920,y:305,n:'B'}];
+const PL=[[Z1A,Z1B],[P2A,P2B],[P3A,P3B]];
+const W='#f6f4ea';
+function base(){
+ let s=`<defs><pattern id="wood" width="120" height="26" patternUnits="userSpaceOnUse"><rect width="120" height="26" fill="#c98a4b"/><rect y="24" width="120" height="2" fill="#a96f37"/><rect x="70" width="2" height="26" fill="#a96f37"/></pattern><pattern id="mesh" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M0 0L10 10M10 0L0 10" stroke="#fff" stroke-opacity=".55" stroke-width="1.4"/></pattern><linearGradient id="turf" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2f8a5f"/><stop offset="1" stop-color="#226e4b"/></linearGradient></defs>`;
+ s+=`<rect x="-60" y="-60" width="1460" height="730" fill="url(#wood)"/><rect x="-6" y="6" width="1352" height="616" fill="#000" opacity=".18"/><rect x="0" y="0" width="1340" height="610" fill="url(#turf)"/>`;
+ s+=`<g stroke="${W}" stroke-width="6" fill="none"><rect x="3" y="3" width="1334" height="604"/><line x1="0" y1="46" x2="1340" y2="46"/><line x1="0" y1="564" x2="1340" y2="564"/><line x1="472" y1="0" x2="472" y2="610"/><line x1="868" y1="0" x2="868" y2="610"/><line x1="76" y1="0" x2="76" y2="610"/><line x1="1264" y1="0" x2="1264" y2="610"/><line x1="0" y1="305" x2="472" y2="305"/><line x1="868" y1="305" x2="1340" y2="305"/></g>`;
+ return s;
+}
+function net(){return `<rect x="666" y="-28" width="14" height="672" fill="#000" opacity=".22"/><rect x="662" y="-30" width="16" height="670" fill="url(#mesh)" stroke="${W}" stroke-width="3"/><rect x="660" y="-30" width="20" height="10" fill="${W}"/><circle cx="670" cy="-34" r="12" fill="#e8e4d6" stroke="#0f2e22" stroke-width="4"/><circle cx="670" cy="644" r="12" fill="#e8e4d6" stroke="#0f2e22" stroke-width="4"/>`}
+function zones(){let s='<g stroke="#d8f34a" stroke-width="5" stroke-dasharray="18 14" opacity=".9">';[223,447,893,1117].forEach(x=>s+=`<line x1="${x}" y1="6" x2="${x}" y2="604"/>`);[203,407].forEach(y=>s+=`<line x1="6" y1="${y}" x2="664" y2="${y}"/><line x1="676" y1="${y}" x2="1334" y2="${y}"/>`);return s+'</g>'}
+function tok(p,t,i,trunk){
+ const c=t?'#ff6a4d':'#5cc8ff';
+ return `<g class="tok" id="${t?'b':'a'}${i}" transform="translate(${p.x} ${p.y})"><ellipse cx="10" cy="40" rx="44" ry="12" fill="#000" opacity=".28"/><g class="spin">${trunk?'<path d="M0 30 Q-6 60 6 84" stroke="#d8f34a" stroke-width="14" stroke-linecap="round" fill="none"/>':''}<g class="body"><circle r="46" fill="${c}" stroke="#0f2e22" stroke-width="5"/><path d="M-30 -24 A38 38 0 0 1 8 -38" stroke="#fff" stroke-opacity=".7" stroke-width="6" fill="none" stroke-linecap="round"/><text y="17" text-anchor="middle" font-size="46" font-family="Black Han Sans, Noto Sans KR, Arial, sans-serif" fill="#0f2e22">${p.n}</text></g></g></g>`;
+}
+function shut(k,skirt,cork){return `<ellipse id="sd${k}" rx="16" ry="6" fill="#000" opacity=".3"/><g id="sh${k}"><path d="M-15 -20 L15 -20 L6 6 L-6 6 Z" fill="${skirt}" stroke="#0f2e22" stroke-width="3" stroke-linejoin="round"/><path d="M-5 -20 L-2 6 M5 -20 L2 6" stroke="#0f2e22" stroke-width="2"/><circle cy="11" r="8" fill="${cork}" stroke="#0f2e22" stroke-width="3"/></g>`}
+let run=0;const tw=[];
+function tween(dur,f,done){tw.push({t0:performance.now(),dur,f,done,run})}
+function frame(now){for(const a of tw.slice()){if(a.run!==run){tw.splice(tw.indexOf(a),1);continue}const t=Math.min(1,(now-a.t0)/a.dur);a.f(t);if(t>=1){tw.splice(tw.indexOf(a),1);a.done&&a.done()}}requestAnimationFrame(frame)}
+function setSh(k,x,y,ang,lift){const sh=$('sh'+k),sd=$('sd'+k);if(!sh)return;sh.setAttribute('transform',`translate(${x} ${y-lift}) rotate(${ang}) scale(1.5)`);sd.setAttribute('transform',`translate(${x} ${y+10}) scale(${Math.max(.4,1-lift/400)})`)}
+function fly(k,p,q,dur,h,done){tween(dur,e=>{const x=p.x+(q.x-p.x)*e,y=p.y+(q.y-p.y)*e,l=4*h*e*(1-e);const ang=Math.atan2((q.y-p.y)-4*h*(1-2*e),q.x-p.x)*180/Math.PI-90;setSh(k,x,y,ang,l)},done)}
+function hit(id){const g=document.querySelector('#'+id+' .body');if(!g)return;g.classList.remove('hit');g.getBoundingClientRect();g.classList.add('hit')}
+const hud=(t,win)=>{const h=$('hud');h.textContent=t;h.classList.toggle('win',!!win)};
+const rnd=n=>Math.floor(Math.random()*n);
+function loop(k,A,B,side,i,first){const from=(side?B:A)[i],ns=1-side,ni=first!=null?first:rnd(A.length),to=(ns?B:A)[ni];fly(k,from,to,700+Math.random()*400,90+Math.random()*130,()=>{hit((ns?'b':'a')+ni);loop(k,A,B,ns,ni)})}
+function spinTo(d){document.querySelectorAll('#court .spin').forEach(g=>g.setAttribute('transform',`rotate(${d})`))}
+function run3(){
+ const r=run;let k=0;const A=P3A[0],B=P3B[0];setSh(1,A.x+70,A.y,0,0);hud('코끼리코 0/6바퀴');
+ const spin=()=>{if(r!==run)return;if(k===6){spinTo(0);hud('랠리 시작!');tween(600,()=>{},()=>rally(0));return}tween(520,t=>spinTo(t*360),()=>{k++;hud(`코끼리코 ${k}/6바퀴`);spin()})};
+ const rally=n=>{if(r!==run)return;if(n===5){hud('성공! 랠리 5회',true);tween(1800,()=>{},()=>{if(r===run)run3()});return}const p=n%2?B:A,q=n%2?A:B;fly(1,p,q,780,150,()=>{hit(n%2?'a0':'b0');hud(`랠리 ${n+1}/5`);rally(n+1)});tween(780,t=>spinTo(Math.sin(t*Math.PI*2)*14))};
+ spin();
+}
+function drawCourt(){
+ const i=st.stage,[A,B]=PL[i];let s=base();if(i===0)s+=zones();
+ s+=A.map((p,j)=>tok(p,0,j,i===2)).join('')+B.map((p,j)=>tok(p,1,j,i===2)).join('');
+ s+=net();s+=shut(1,'#ffffff','#d8f34a');if(i===1)s+=shut(2,'#d8f34a','#ffffff');
+ $('court').innerHTML=s;
+ $('court').setAttribute('aria-label',['9구역으로 나눈 복식 코트에 양 팀 9명이 앉아서 랠리하는 모습','양 팀 1번이 전위 중앙, 2번이 오른쪽 뒤, 3번이 왼쪽 뒤에 서서 셔틀콕 2개로 경기하는 모습','두 선수가 코끼리코로 6바퀴 돈 뒤 랠리를 5회 이어가는 모습'][i]);
+ hud(S[i].hud);
+ if(i===0){if(still){setSh(1,670,200,-90,0);return}loop(1,Z1A,Z1B,0,4)}
+ if(i===1){if(still){setSh(1,670,280,-90,0);setSh(2,670,330,90,0);return}loop(1,P2A,P2B,0,0,0);loop(2,P2A,P2B,1,0,0)}
+ if(i===2){if(still){setSh(1,670,305,-90,0);hud('6바퀴 → 랠리 5회 = 성공');return}run3()}
+}
+function legend(){const[a,b]=st.names.map(esc);const extra=['노란 점선 = 바닥 테이프 9구역','흰 셔틀콕과 연두 셔틀콕이 동시에 날아요 · 좌우는 네트를 바라보는 선수 기준','연두 꼬리 = 코끼리코 팔'][st.stage];$('legend').innerHTML=`<span><i class="chip a"></i><b>${a}</b></span><span><i class="chip b"></i><b>${b}</b></span><span>${extra}</span>`}
+function rules(){const s=S[st.stage];let h=`<h2>${s.title}</h2><dl>${s.rules.map(([t,d])=>`<dt>${t}</dt><dd>${d}</dd>`).join('')}</dl>`;
+ if(s.vid)h+=`<a class="vid" href="${s.vid[2]}" target="_blank" rel="noopener"><svg width="34" height="34" viewBox="0 0 34 34" aria-hidden="true"><circle cx="17" cy="17" r="16" fill="#ff6a4d"/><path d="M13 10 L24 17 L13 24 Z" fill="#f4f1e8"/></svg><span>${s.vid[0]} · YouTube에서 보기<small>${s.vid[1]}</small></span></a>`;
+ else h+=`<p class="note" style="text-align:left">핵심: 셔틀콕 하나만 떨어뜨리면 점수가 나지 않아요. 두 개 모두 떨어져야 1점!</p>`;
+ $('rules').innerHTML=h}
+function board(){
+ const[a,b]=st.names.map(esc),i=st.stage;let h=`<div class="sbh"><h3>실시간 점수판</h3><button class="reset" data-act="reset">점수 초기화</button></div>`;
+ if(i===0){const[x,y]=st.s1;h+=`<div class="duel"><div><div class="tm a">${a}</div><div class="big">${x}</div><div class="pm"><button data-act="p" data-t="0" data-d="-1" aria-label="${a} 1점 빼기">−</button><button class="up" data-act="p" data-t="0" data-d="1" aria-label="${a} 1점 더하기">+1</button></div></div><div class="vs">21점<br>선취</div><div><div class="tm b">${b}</div><div class="big">${y}</div><div class="pm"><button data-act="p" data-t="1" data-d="-1" aria-label="${b} 1점 빼기">−</button><button class="up" data-act="p" data-t="1" data-d="1" aria-label="${b} 1점 더하기">+1</button></div></div></div>`;
+  if(x>=21||y>=21)h+=`<div class="banner">${x>=21?a:b} 승리!</div>`}
+ if(i===1){let wa=0,wb=0;h+=`<div class="duel" style="margin-bottom:6px"><div class="tm a">${a}</div><div class="vs">8점 단세트</div><div class="tm b">${b}</div></div>`;
+  st.s2.forEach(([x,y],r)=>{const d=x>=8||y>=8;if(x>=8)wa++;if(y>=8)wb++;h+=`<div class="mrow${d?' done':''}"><span class="lab">${r+1}조${d?' 끝':''}</span><div class="mini"><button data-act="m" data-r="${r}" data-t="0" data-d="-1" aria-label="${r+1}조 ${a} 1점 빼기">−</button><span class="n">${x}</span><button data-act="m" data-r="${r}" data-t="0" data-d="1" aria-label="${r+1}조 ${a} 1점 더하기">+</button></div><span class="colon">:</span><div class="mini"><button data-act="m" data-r="${r}" data-t="1" data-d="-1" aria-label="${r+1}조 ${b} 1점 빼기">−</button><span class="n">${y}</span><button data-act="m" data-r="${r}" data-t="1" data-d="1" aria-label="${r+1}조 ${b} 1점 더하기">+</button></div></div>`});
+  h+=`<p class="note">이긴 조 수 · ${a} <b>${wa}</b> : <b>${wb}</b> ${b}</p>`}
+ if(i===2){const c=st.s3.map(r=>r.reduce((s,v)=>s+v,0));
+  st.s3.forEach((row,t)=>{h+=`<div class="prow"><div class="tm ${t?'b':'a'}"><span>${t?b:a}</span><span>성공 ${c[t]}/5</span></div><div class="pairs">${row.map((v,j)=>`<button class="pair ${t?'b':'a'}${v?' ok':''}" data-act="c" data-t="${t}" data-i="${j}" aria-pressed="${!!v}">${j+1}조<br>${v?'성공!':'도전 전'}</button>`).join('')}</div></div>`});
+  h+=c[0]===c[1]?`<p class="note">성공한 조를 눌러 표시하세요. 지금은 동점이에요.</p>`:`<div class="banner">${c[0]>c[1]?a:b} 앞서는 중 (${Math.max(...c)} : ${Math.min(...c)})</div>`}
+ $('board').innerHTML=h}
+const R=[['오종선',0],['이은효',0],['이서연',0],['조성식',0],['이도연',0],['정원우',0],['최영권',0],['하재청',0],['손주완',0],['권혁준',0],
+['이재승',1],['김경리',1],['김달식',1],['심재홍',1],['김찬영',1],['이도성',1],['박현숙',1],['염창훈',1],['김대훈',1],['이정리',1]];
+const TN=['총무팀','회장팀'];
+function roster(){$('rteams').innerHTML=[0,1].map(t=>{const m=R.filter(r=>r[1]===t);return `<div class="team ${t?'b':'a'}"><div class="thd"><h3>${TN[t]}</h3><span>${m.length}명</span></div><ul class="mem">${m.map(r=>`<li><b>${r[0]}</b></li>`).join('')}</ul></div>`}).join('')}
+function tabs(){$('stages').innerHTML=S.map((s,i)=>`<button role="tab" id="tab${i}" aria-selected="${i===st.stage}" data-stage="${i}"><span class="lv">${s.lv}</span><span class="nm">${s.nm}</span><span class="tg">${s.tg}</span></button>`).join('')}
+function setStage(i,push){st.stage=i;run++;tw.length=0;tabs();drawCourt();legend();rules();board();save();if(push&&location.hash!=='#'+S[i].id){try{history.replaceState(null,'','#'+S[i].id)}catch(e){location.hash=S[i].id}}}
+document.addEventListener('click',e=>{
+ const tb=e.target.closest('[data-stage]');if(tb){setStage(+tb.dataset.stage,true);return}
+ const b=e.target.closest('[data-act]');if(!b)return;const d=b.dataset,t=+d.t;
+ if(d.act==='reset'){if(st.stage===0)st.s1=[0,0];if(st.stage===1)st.s2=[[0,0],[0,0],[0,0]];if(st.stage===2)st.s3=[[0,0,0,0,0],[0,0,0,0,0]]}
+ if(d.act==='p')st.s1[t]=Math.max(0,Math.min(21,st.s1[t]+ +d.d));
+ if(d.act==='m'){const r=st.s2[+d.r];r[t]=Math.max(0,Math.min(8,r[t]+ +d.d))}
+ if(d.act==='c'){const r=st.s3[t];r[+d.i]=r[+d.i]?0:1}
+ board();save();
+});
+document.addEventListener('keydown',e=>{if(!e.target.closest('#stages'))return;if(e.key==='ArrowRight'||e.key==='ArrowLeft'){const n=(st.stage+(e.key==='ArrowRight'?1:2))%3;setStage(n,true);$('tab'+n).focus()}});
+['nameA','nameB'].forEach((id,t)=>$(id).addEventListener('input',e=>{st.names[t]=e.target.value.trim()||(t?'회장팀':'총무팀');legend();board();save()}));
+addEventListener('hashchange',()=>{const i=S.findIndex(s=>'#'+s.id===location.hash);if(i>=0&&i!==st.stage)setStage(i)});
+function start(data){
+ try{const sv=JSON.parse(localStorage.getItem('buseong-match-v2')||'null');if(sv&&sv.s3)st=Object.assign(fresh(),sv)}catch(e){}
+ if(data&&data.s3)st=Object.assign(fresh(),data);
+ const hi=S.findIndex(s=>'#'+s.id===location.hash);if(hi>=0)st.stage=hi;
+ $('nameA').value=st.names[0];$('nameB').value=st.names[1];
+ roster();setStage(st.stage);requestAnimationFrame(frame);
+}
+window.claude?.hot?.snapshot?.(()=>st);
+window.claude?.hot?.ready?window.claude.hot.ready(start):start(window.claude?.hot?.data??{});
+}
+</script>
+</body>
+</html>
