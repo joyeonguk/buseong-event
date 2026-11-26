@@ -257,7 +257,7 @@ const S=[
  rules:[['인원','2인 1조, 팀당 <b>5조</b> 출전'],['방법','코끼리코 <b>6바퀴</b> 돈 뒤 바로 랠리'],['성공','랠리를 <b>5회 이상</b> 이어가면 성공'],['승리','성공한 조가 더 많은 팀 승리']],
  vid:['참고 영상','코끼리코 민턴 경기 예시','https://www.youtube.com/watch?v=n4K9OSSYd14'],hud:'코끼리코 준비'},
 {id:'bonus',lv:'BONUS',nm:'상품 갖기',tg:'이긴 팀부터 · 맞출 때까지',title:'보너스: 상품 갖기',
- rules:[['때','3판 2선승 이벤트 경기가 끝난 뒤'],['방법','경기이사가 상품을 깔아 둔 쪽에서 셔틀콕을 올려주면, 반대편에서 쳐서 상품을 맞혀요'],['획득','친 셔틀콕에 <b>가장 먼저 닿은</b> 상품을 가져가요'],['순서','<b>이긴 팀 → 진 팀</b>, 팀 안에서는 급수 순, 같은 급수면 연장자부터'],['실패','못 맞추면 <b>맨 뒤로</b> (진 팀 차례가 끝난 뒤), 맞출 때까지 계속'],['상품','라면, 셔틀콕, 라켓, 음료, 계란, 햇반 등']],
+ rules:[['때','3판 2선승 이벤트 경기가 끝난 뒤'],['방법','경기이사가 상품을 깔아 둔 쪽에서 셔틀콕을 올려주면, 반대편에서 쳐서 상품을 맞혀요'],['획득','친 셔틀콕에 <b>가장 먼저 닿은</b> 상품을 무조건 가져가요. 바닥에 먼저 맞고 튀어서 닿아도 인정!'],['순서','<b>이긴 팀 → 진 팀</b>, 팀 안에서는 급수 순, 같은 급수면 연장자부터'],['실패','못 맞추면 <b>맨 뒤로</b> (진 팀 차례가 끝난 뒤), 맞출 때까지 계속'],['상품','라면, 셔틀콕, 라켓, 음료, 계란, 햇반 등']],
  vid:null,hud:'경기이사가 셔틀콕을 올려줘요'}
 ];
 const fresh=()=>({stage:0,names:['총무팀','회장팀'],s1:[0,0],s2:[[0,0],[0,0],[0,0]],s3:[[0,0,0,0,0],[0,0,0,0,0]],s4:{win:null,q:[],done:[],m:{}}});
@@ -348,7 +348,7 @@ const PRIZES=['라면','셔틀콕','라켓','음료','계란','햇반','기타']
 let hist=[],sel=null;
 function prizes(){return PZ.map((z,k)=>`<g class="tok" id="pz${k}" transform="translate(${z.x} ${z.y})"><rect x="-42" y="-36" width="96" height="96" rx="18" fill="#000" opacity=".22"/><g class="body"><rect x="-48" y="-48" width="96" height="96" rx="18" fill="${z.c}" stroke="#0f2e22" stroke-width="5"/><text y="11"${vert?' transform="rotate(-90)"':''} text-anchor="middle" font-size="${z.l.length>2?26:32}" font-weight="900" font-family="Noto Sans KR, Arial, sans-serif" fill="#0f2e22">${z.l}</text></g></g>`).join('')}
 function run4(){const r=run,P=P4[0],F=F4[0];setSh(1,F.x-60,F.y,0,0);
- const go=()=>{if(r!==run)return;hud('경기이사 토스!');fly(1,F,P,950,170,()=>{if(r!==run)return;hit('a0');hud('쳐라!');const miss=Math.random()<.35,k=rnd(PZ.length),T=miss?EMPTY[rnd(EMPTY.length)]:PZ[k];fly(1,P,T,1050,230,()=>{if(r!==run)return;if(miss)hud('아쉽다! 맨 뒤로');else{hit('pz'+k);hud(`${PZ[k].l} 획득!`,true)}tween(1700,()=>{},go)})})};
+ const go=()=>{if(r!==run)return;hud('경기이사 토스!');fly(1,F,P,950,170,()=>{if(r!==run)return;hit('a0');hud('쳐라!');const miss=Math.random()<.35,k=rnd(PZ.length),T=miss?EMPTY[rnd(EMPTY.length)]:PZ[k];fly(1,P,T,1050,230,()=>{if(r!==run)return;const next=()=>tween(1700,()=>{},go);if(!miss){hit('pz'+k);hud(`${PZ[k].l} 획득!`,true);next();return}if(Math.random()<.5){let j=0,best=1e9;PZ.forEach((z,q)=>{const dd=(z.x-T.x)**2+(z.y-T.y)**2;if(dd<best){best=dd;j=q}});hud('바닥에 통!');fly(1,T,PZ[j],500,30,()=>{if(r!==run)return;hit('pz'+j);hud(`바운드 인정! ${PZ[j].l} 획득!`,true);next()});return}hud('아쉽다! 맨 뒤로');next()})})};
  tween(700,()=>{},go)}
 const teamOf=n=>ORD[0].includes(n)?0:1;
 function prizeUI(){const s4=st.s4,nm=st.names.map(esc);
