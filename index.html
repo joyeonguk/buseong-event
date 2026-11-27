@@ -343,7 +343,7 @@ const SPARK='<svg class="spark" viewBox="0 0 30 30" aria-hidden="true"><path d="
 function roster(){const m=t=>R.filter(r=>r[1]===t);
  $('vsbar').innerHTML=[0,1].map(t=>`<div class="vside ${t?'b':'a'}"><span class="fw">${CHIBI(FACE[t],t)}</span><div><b>${TN[t]}</b><small>${m(t).length}명 출전</small></div></div>`).join('')+'<div class="vsx" aria-hidden="true">VS</div>';
  $('rteams').innerHTML=[0,1].map(t=>`<div class="team ${t?'b':'a'}"><h3>${TN[t]} 라인업</h3><ul class="mem">${m(t).map((r,j)=>`<li style="--i:${j+t*10}"><span class="num">${j+1}</span><b>${r[0]}</b></li>`).join('')}</ul></div>`).join('')}
-const ORD=[['오종선','이은효','정원우','이도연','이서연','조성식','한지백','권혁준','손주완','장윤미','하재청','안정','최영권'],['신정아','이재승','김달식','김경리','이정리','김대훈','염창훈','박현숙','이지은','이도성','조영욱','김찬영','심재홍']];
+const ORD=[['오종선','이은효','정원우','이도연','이서연','한지백','권혁준','손주완','장윤미','조성식','하재청','안정','최영권'],['신정아','이재승','김경리','이정리','김대훈','김달식','염창훈','박현숙','이지은','이도성','조영욱','김찬영','심재홍']];
 const PRIZES=['라면','셔틀콕','라켓','음료','계란','햇반','기타'];
 let hist=[],sel=null;
 function prizes(){return PZ.map((z,k)=>`<g class="tok" id="pz${k}" transform="translate(${z.x} ${z.y})"><rect x="-42" y="-36" width="96" height="96" rx="18" fill="#000" opacity=".22"/><g class="body"><rect x="-48" y="-48" width="96" height="96" rx="18" fill="${z.c}" stroke="#0f2e22" stroke-width="5"/><text y="11"${vert?' transform="rotate(-90)"':''} text-anchor="middle" font-size="${z.l.length>2?26:32}" font-weight="900" font-family="Noto Sans KR, Arial, sans-serif" fill="#0f2e22">${z.l}</text></g></g>`).join('')}
