@@ -191,6 +191,12 @@ summary{cursor:pointer;font-weight:700}
 .fsprize .acts button{min-height:80px;font-size:24px}
 .fsprize .pzc{font-size:18px;padding:10px 18px}
 .fsprize .note,.fsprize details{font-size:18px}
+.rot{display:flex;justify-content:space-between;gap:6px;margin-top:10px;font-size:14px;color:var(--soft)}
+.rot b{color:var(--ink)}
+.oncourt{display:inline-block;margin-top:6px;font-weight:900;font-size:15px;padding:4px 12px;border-radius:999px;color:var(--bg)}
+.oncourt.a{background:var(--a)}.oncourt.b{background:var(--b)}
+.qline{font-size:13px;color:var(--soft);margin-top:4px}
+.fsrot{text-align:center;font-weight:900;font-size:clamp(16px,2.4vw,24px)}
 @media(max-width:980px){main{grid-template-columns:minmax(0,1fr)}.side{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:720px){.safety .wrap{grid-template-columns:repeat(3,minmax(0,1fr))}.safety h2{grid-column:1/-1}}
 @media(max-width:600px){header{grid-template-columns:minmax(0,1fr)}.side{grid-template-columns:minmax(0,1fr)}nav{gap:8px}nav button{padding:10px}nav .tg{display:none}.safety .wrap{grid-template-columns:minmax(0,1fr)}.hud{position:static;display:block;text-align:center;margin-top:8px;border-radius:12px;font-size:14px;padding:6px 10px}.teams{flex-wrap:nowrap}.teams label{flex:1;padding:6px 8px;gap:6px;white-space:nowrap}.teams input{width:100%}
@@ -250,8 +256,8 @@ const S=[
 {id:'stage1',lv:'STAGE 1',nm:'앉아민턴',tg:'9 vs 9 · 21점 단판',title:'앉아민턴 9 vs 9',
  rules:[['인원','팀당 <b>9명</b> 출전 (9 vs 9)'],['방식','바닥에 앉은 자세로만 경기'],['점수','<b>21점</b> 단판 경기'],['교체','경기 중 언제든 자유롭게 교체'],['코트','복식 코트를 <b>9구역</b>으로 표시, 구역마다 1명']],
  vid:['참고 영상','배드민턴클럽 창립총회 ‘앉아서 하는 게임’','https://www.youtube.com/watch?v=NjUr9V6B8_M'],hud:'앉아서 랠리 중 · 21점 단판'},
-{id:'stage2',lv:'STAGE 2',nm:'더블셔틀 3:3',tg:'셔틀콕 2개 · 8점 단세트',title:'더블셔틀 3 vs 3',
- rules:[['인원','3인 1조, 팀당 <b>3조</b> 출전 (3복식)'],['포지션','1번 전위 중앙 · 2번 오른쪽 뒤 · 3번 왼쪽 뒤'],['시작','진행자 수신호에 맞춰 양 팀 1번이 상대 1번에게 동시 서브'],['득점','셔틀콕 <b>2개 모두</b> 득점해야 1점'],['세트','<b>8점</b> 단세트']],
+{id:'stage2',lv:'STAGE 2',nm:'더블셔틀 3:3',tg:'4조 로테이션 · 12점 단세트',title:'더블셔틀 3 vs 3',
+ rules:[['인원','3인 1조, 팀당 <b>4조</b> (12명) 출전'],['참여','앉아민턴에 나오지 않은 선수는 <b>반드시 출전</b> (교체 선수 가능)'],['포지션','1번 전위 중앙 · 2번 오른쪽 뒤 · 3번 왼쪽 뒤'],['시작','진행자 수신호에 맞춰 양 팀 1번이 상대 1번에게 동시 서브'],['득점','셔틀콕 <b>2개 모두</b> 득점해야 1점'],['로테이션','<b>득점한 조는 빠지고</b> 다음 조가 들어와요. 실점한 조는 그대로 남아요'],['세트','팀 합산 <b>12점</b> 단세트']],
  vid:null,hud:'셔틀콕 2개 동시 진행'},
 {id:'stage3',lv:'STAGE 3',nm:'코끼리코 민턴',tg:'6바퀴 + 랠리 5회',title:'코끼리코 민턴',
  rules:[['인원','2인 1조, 팀당 <b>5조</b> 출전'],['방법','코끼리코 <b>6바퀴</b> 돈 뒤 바로 랠리'],['성공','랠리를 <b>5회 이상</b> 이어가면 성공'],['승리','성공한 조가 더 많은 팀 승리']],
@@ -260,7 +266,7 @@ const S=[
  rules:[['때','3판 2선승 이벤트 경기가 끝난 뒤'],['방법','경기이사가 상품을 깔아 둔 쪽에서 셔틀콕을 올려주면, 반대편에서 쳐서 상품을 맞혀요'],['획득','친 셔틀콕에 <b>가장 먼저 닿은</b> 상품을 무조건 가져가요. 바닥에 먼저 맞고 튀어서 닿아도 인정!'],['순서','<b>이긴 팀 → 진 팀</b>, 팀 안에서는 <b>급수가 낮은 사람부터</b>, 같은 급수면 연장자부터'],['실패','못 맞추면 <b>맨 뒤로</b> (진 팀 차례가 끝난 뒤), 맞출 때까지 계속'],['상품','라면, 셔틀콕, 라켓, 음료, 계란, 햇반 등']],
  vid:null,hud:'경기이사가 셔틀콕을 올려줘요'}
 ];
-const fresh=()=>({stage:0,names:['총무팀','회장팀'],s1:[0,0],s2:[[0,0],[0,0],[0,0]],s3:[[0,0,0,0,0],[0,0,0,0,0]],s4:{win:null,q:[],done:[],m:{}}});
+const fresh=()=>({stage:0,names:['총무팀','회장팀'],s1:[0,0],s2:{sc:[0,0],cur:[0,0],h:[]},s3:[[0,0,0,0,0],[0,0,0,0,0]],s4:{win:null,q:[],done:[],m:{}}});
 let st=fresh();
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=id=>document.getElementById(id);
@@ -327,9 +333,10 @@ function board(){
  const[a,b]=st.names.map(esc),i=st.stage;let h=`<div class="sbh"><h3>실시간 점수판</h3><div class="sbtools"><button class="fsbtn" data-act="fs">전체화면</button><button class="reset" data-act="reset">초기화</button></div></div>`;
  if(i===0){const[x,y]=st.s1;h+=`<div class="duel"><div><div class="tm a">${a}</div><div class="big">${x}</div><div class="pm"><button data-act="p" data-t="0" data-d="-1" aria-label="${a} 1점 빼기">−</button><button class="up" data-act="p" data-t="0" data-d="1" aria-label="${a} 1점 더하기">+1</button></div></div><div class="vs">21점<br>선취</div><div><div class="tm b">${b}</div><div class="big">${y}</div><div class="pm"><button data-act="p" data-t="1" data-d="-1" aria-label="${b} 1점 빼기">−</button><button class="up" data-act="p" data-t="1" data-d="1" aria-label="${b} 1점 더하기">+1</button></div></div></div>`;
   if(x>=21||y>=21)h+=`<div class="banner">${x>=21?a:b} 승리!</div>`}
- if(i===1){let wa=0,wb=0;h+=`<div class="duel" style="margin-bottom:6px"><div class="tm a">${a}</div><div class="vs">8점 단세트</div><div class="tm b">${b}</div></div>`;
-  st.s2.forEach(([x,y],r)=>{const d=x>=8||y>=8;if(x>=8)wa++;if(y>=8)wb++;h+=`<div class="mrow${d?' done':''}"><span class="lab">${r+1}조${d?' 끝':''}</span><div class="mini"><button data-act="m" data-r="${r}" data-t="0" data-d="-1" aria-label="${r+1}조 ${a} 1점 빼기">−</button><span class="n">${x}</span><button data-act="m" data-r="${r}" data-t="0" data-d="1" aria-label="${r+1}조 ${a} 1점 더하기">+</button></div><span class="colon">:</span><div class="mini"><button data-act="m" data-r="${r}" data-t="1" data-d="-1" aria-label="${r+1}조 ${b} 1점 빼기">−</button><span class="n">${y}</span><button data-act="m" data-r="${r}" data-t="1" data-d="1" aria-label="${r+1}조 ${b} 1점 더하기">+</button></div></div>`});
-  h+=`<p class="note">이긴 조 수 · ${a} <b>${wa}</b> : <b>${wb}</b> ${b}</p>`}
+ if(i===1){const x=st.s2,side=(t,nm)=>`<div><div class="tm ${t?'b':'a'}">${nm}</div><div class="big">${x.sc[t]}</div><span class="oncourt ${t?'b':'a'}">코트: ${x.cur[t]+1}조</span><div class="qline">대기 ${[1,2,3].map(k=>(x.cur[t]+k)%4+1+'조').join(' → ')}</div><div class="pm"><button class="up" data-act="m2" data-t="${t}" aria-label="${nm} 득점">+1 득점</button></div></div>`;
+  h+=`<div class="duel">${side(0,a)}<div class="vs">12점<br>단세트</div>${side(1,b)}</div>`;
+  h+=`<p class="note">득점한 조는 빠지고 다음 조가 들어와요 · 실점한 조는 남아요 <button class="undo" data-act="m2u"${x.h.length?'':' disabled'}>되돌리기</button></p>`;
+  if(x.sc[0]>=12||x.sc[1]>=12)h+=`<div class="banner">${x.sc[0]>=12?a:b} 승리!</div>`}
  if(i===2){const c=st.s3.map(r=>r.reduce((s,v)=>s+v,0));
   st.s3.forEach((row,t)=>{h+=`<div class="prow"><div class="tm ${t?'b':'a'}"><span>${t?b:a}</span><span>성공 ${c[t]}/5</span></div><div class="pairs">${row.map((v,j)=>`<button class="pair ${t?'b':'a'}${v?' ok':''}" data-act="c" data-t="${t}" data-i="${j}" aria-pressed="${!!v}">${j+1}조<br>${v?'성공!':'도전 전'}</button>`).join('')}</div></div>`});
   h+=c[0]===c[1]?`<p class="note">성공한 조를 눌러 표시하세요. 지금은 동점이에요.</p>`:`<div class="banner">${c[0]>c[1]?a:b} 앞서는 중 (${Math.max(...c)} : ${Math.min(...c)})</div>`}
@@ -367,16 +374,15 @@ const doneList=()=>st.s4.done.length?`<details><summary>상품 획득 ${st.s4.do
 
 let fsRow=0;
 function fsRender(){const o=$('fs');if(o.hidden)return;const[a,b]=st.names.map(esc),i=st.stage;
- let h=`<div class="fsbar"><span class="fst">${S[i].nm} · ${['21점 선취','8점 단세트','성공 조 많은 팀 승리','맞출 때까지 계속'][i]}</span><span class="fsb">${S.map((x,j)=>`<button data-stage="${j}" aria-pressed="${j===i}">${j+1}</button>`).join('')}<button data-act="reset">초기화</button><button class="x" data-act="fsx">닫기</button></span></div>`;
+ let h=`<div class="fsbar"><span class="fst">${S[i].nm} · ${['21점 선취','12점 단세트 · 득점 조 교체','성공 조 많은 팀 승리','맞출 때까지 계속'][i]}</span><span class="fsb">${S.map((x,j)=>`<button data-stage="${j}" aria-pressed="${j===i}">${j+1}</button>`).join('')}<button data-act="reset">초기화</button><button class="x" data-act="fsx">닫기</button></span></div>`;
  if(i===3){o.innerHTML=h+`<div class="fsprize">${prizeUI()}</div>`;return}
- if(i===1)h+=`<div class="fsrows">${[0,1,2].map(r=>`<button data-act="fsr" data-r="${r}" aria-pressed="${r===fsRow}">${r+1}조 ${st.s2[r][0]} : ${st.s2[r][1]}</button>`).join('')}</div>`;
- const val=t=>i===0?st.s1[t]:i===1?st.s2[fsRow][t]:st.s3[t].reduce((x,y)=>x+y,0);
- const half=t=>{const nm=t?b:a,act=i?'m':'p';let inner;
-  if(i<2)inner=`<button class="fsplus" data-act="${act}" data-r="${fsRow}" data-t="${t}" data-d="1" aria-label="${nm} 1점 더하기"><span class="fsn">${val(t)}</span><span class="fsh">탭하면 +1</span></button><button class="fsminus" data-act="${act}" data-r="${fsRow}" data-t="${t}" data-d="-1">− 1점 빼기</button>`;
+ const val=t=>i===0?st.s1[t]:i===1?st.s2.sc[t]:st.s3[t].reduce((x,y)=>x+y,0);
+ const half=t=>{const nm=t?b:a,act=i?'m2':'p';let inner;const rot=i===1?`<div class="fsrot">코트 ${st.s2.cur[t]+1}조 · 다음 ${(st.s2.cur[t]+1)%4+1}조</div>`:'';
+  if(i<2)inner=`<button class="fsplus" data-act="${act}" data-r="${fsRow}" data-t="${t}" data-d="1" aria-label="${nm} 1점 더하기"><span class="fsn">${val(t)}</span><span class="fsh">탭하면 +1</span></button>${i===1?'<button class="fsminus" data-act="m2u">되돌리기</button>':`<button class="fsminus" data-act="${act}" data-t="${t}" data-d="-1">− 1점 빼기</button>`}`;
   else inner=`<div class="fs3"><div class="fsn">${val(t)}<small>/5</small></div></div><div class="fspairs">${st.s3[t].map((v,j)=>`<button class="pair${v?' ok':''}" data-act="c" data-t="${t}" data-i="${j}" aria-pressed="${!!v}">${j+1}조<br>${v?'성공!':'도전'}</button>`).join('')}</div>`;
-  return `<div class="fshalf ${t?'b':'a'}"><div class="fsname">${nm}</div>${inner}</div>`};
+  return `<div class="fshalf ${t?'b':'a'}"><div class="fsname">${nm}</div>${rot}${inner}</div>`};
  h+=`<div class="fsmain">${half(0)}<div class="fsvs">VS</div>${half(1)}</div>`;
- if(i<2){const tg=i?8:21,x=val(0),y=val(1);if(x>=tg||y>=tg)h+=`<div class="fswin">${i?(fsRow+1)+'조 ':''}${x>=tg?a:b} 승리!</div>`}
+ if(i<2){const tg=i?12:21,x=val(0),y=val(1);if(x>=tg||y>=tg)h+=`<div class="fswin">${x>=tg?a:b} 승리!</div>`}
  o.innerHTML=h}
 function fsOpen(){const o=$('fs');o.hidden=false;document.body.style.overflow='hidden';try{const r=document.documentElement.requestFullscreen?.();r&&r.catch&&r.catch(()=>{})}catch(e){}fsRender()}
 function fsClose(){$('fs').hidden=true;document.body.style.overflow='';try{if(document.fullscreenElement){const r=document.exitFullscreen();r&&r.catch&&r.catch(()=>{})}}catch(e){}}
@@ -392,9 +398,10 @@ document.addEventListener('click',e=>{
  if(d.act==='pz'){sel=sel===d.p?null:d.p}
  if(d.act==='ok'||d.act==='miss'){const s4=st.s4;if(s4.q.length){hist.push(JSON.stringify(s4));const n=s4.q.shift();if(d.act==='ok'){s4.done.push({n,p:sel||''});sel=null}else{s4.m[n]=(s4.m[n]||0)+1;s4.q.push(n)}}}
  if(d.act==='undo'&&hist.length){st.s4=JSON.parse(hist.pop());sel=null}
- if(d.act==='reset'){if(st.stage===3){st.s4=fresh().s4;hist=[];sel=null}if(st.stage===0)st.s1=[0,0];if(st.stage===1)st.s2=[[0,0],[0,0],[0,0]];if(st.stage===2)st.s3=[[0,0,0,0,0],[0,0,0,0,0]]}
+ if(d.act==='reset'){if(st.stage===3){st.s4=fresh().s4;hist=[];sel=null}if(st.stage===0)st.s1=[0,0];if(st.stage===1)st.s2=fresh().s2;if(st.stage===2)st.s3=[[0,0,0,0,0],[0,0,0,0,0]]}
  if(d.act==='p')st.s1[t]=Math.max(0,Math.min(21,st.s1[t]+ +d.d));
- if(d.act==='m'){const r=st.s2[+d.r];r[t]=Math.max(0,Math.min(8,r[t]+ +d.d))}
+ if(d.act==='m2'){const x=st.s2;if(x.sc[0]<12&&x.sc[1]<12){x.sc[t]++;x.cur[t]=(x.cur[t]+1)%4;x.h.push(t)}}
+ if(d.act==='m2u'&&st.s2.h.length){const x=st.s2,u=x.h.pop();x.sc[u]--;x.cur[u]=(x.cur[u]+3)%4}
  if(d.act==='c'){const r=st.s3[t];r[+d.i]=r[+d.i]?0:1}
  board();fsRender();save();
 });
@@ -405,6 +412,7 @@ addEventListener('hashchange',()=>{const i=S.findIndex(s=>'#'+s.id===location.ha
 function start(data){
  try{const sv=JSON.parse(localStorage.getItem('buseong-match-v2')||'null');if(sv&&sv.s3)st=Object.assign(fresh(),sv)}catch(e){}
  if(data&&data.s3)st=Object.assign(fresh(),data);
+ if(!st.s2||!st.s2.sc)st.s2=fresh().s2;if(!st.s4||!st.s4.q)st.s4=fresh().s4;if(st.stage>3)st.stage=0;
  const hi=S.findIndex(s=>'#'+s.id===location.hash);if(hi>=0)st.stage=hi;
  $('nameA').value=st.names[0];$('nameB').value=st.names[1];
  roster();setStage(st.stage);requestAnimationFrame(frame);
