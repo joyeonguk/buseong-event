@@ -81,7 +81,7 @@ dd b{background:var(--lime);color:var(--bg);padding:0 6px;border-radius:4px}
 .colon{color:var(--soft)}
 .prow{padding:10px 0;border-top:1px solid var(--line)}
 .prow .tm{text-align:left;margin-bottom:8px;display:flex;justify-content:space-between}
-.pairs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px}
+.pairs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px}
 .pair{all:unset;cursor:pointer;text-align:center;border:2px dashed var(--line);border-radius:12px;min-height:52px;font-size:13px;color:var(--soft);display:grid;place-content:center;line-height:1.25}
 .pair.ok{border-style:solid;color:var(--bg);font-weight:900}
 .pair.ok.a{background:var(--a);border-color:var(--a)}.pair.ok.b{background:var(--b);border-color:var(--b)}
@@ -158,7 +158,7 @@ footer{padding:18px 0 30px;color:var(--soft);font-size:13px}
 .fsh{font-weight:700;font-size:15px}
 .fsminus{all:unset;cursor:pointer;text-align:center;min-height:50px;border-radius:14px;background:rgba(15,46,34,.88);color:var(--ink);font-weight:900;font-size:16px;display:grid;place-items:center}
 .fsvs{align-self:center;justify-self:center;width:66px;height:66px;border-radius:50%;background:var(--lime);color:var(--bg);display:grid;place-items:center;font:400 24px 'Black Han Sans','Noto Sans KR',Arial,sans-serif;border:4px solid var(--bg);z-index:1}
-.fspairs{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:6px;margin-top:auto}
+.fspairs{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:auto}
 .fspairs .pair{background:rgba(15,46,34,.88);color:var(--ink);border-color:transparent;min-height:60px;font-size:14px}
 .fspairs .pair.ok{background:var(--bg);color:var(--lime)}
 .fs3{flex:1;display:grid;place-items:center}
@@ -260,13 +260,13 @@ const S=[
  rules:[['인원','3인 1조, 팀당 <b>4조</b> (12명) 출전'],['참여','앉아민턴에 나오지 않은 선수는 <b>반드시 출전</b> (교체 선수 가능)'],['포지션','1번 전위 중앙 · 2번 오른쪽 뒤 · 3번 왼쪽 뒤'],['시작','진행자 수신호에 맞춰 양 팀 1번이 상대 1번에게 동시 서브'],['득점','셔틀콕 <b>2개 모두</b> 득점해야 1점'],['로테이션','<b>득점한 조는 빠지고</b> 다음 조가 들어와요. 실점한 조는 그대로 남아요'],['세트','팀 합산 <b>12점</b> 단세트']],
  vid:null,hud:'셔틀콕 2개 동시 진행'},
 {id:'stage3',lv:'STAGE 3',nm:'코끼리코 민턴',tg:'6바퀴 + 랠리 5회',title:'코끼리코 민턴',
- rules:[['인원','2인 1조, 팀당 <b>5조</b> 출전'],['방법','코끼리코 <b>6바퀴</b> 돈 뒤 바로 랠리'],['성공','랠리를 <b>5회 이상</b> 이어가면 성공'],['승리','성공한 조가 더 많은 팀 승리']],
+ rules:[['인원','2인 1조, 팀당 <b>4조</b> 출전'],['방법','코끼리코 <b>6바퀴</b> 돈 뒤 바로 랠리'],['성공','랠리를 <b>5회 이상</b> 이어가면 성공'],['승리','성공한 조가 더 많은 팀 승리']],
  vid:['참고 영상','코끼리코 민턴 경기 예시','https://www.youtube.com/watch?v=n4K9OSSYd14'],hud:'코끼리코 준비'},
 {id:'final',lv:'FINAL',nm:'상품 갖기',tg:'이긴 팀부터 · 맞출 때까지',title:'파이널: 상품 갖기',
  rules:[['때','3판 2선승 이벤트 경기가 끝난 뒤'],['방법','경기이사가 상품을 깔아 둔 쪽에서 셔틀콕을 올려주면, 반대편에서 쳐서 상품을 맞혀요'],['획득','친 셔틀콕에 <b>가장 먼저 닿은</b> 상품을 무조건 가져가요. 바닥에 먼저 맞고 튀어서 닿아도 인정!'],['순서','<b>이긴 팀 → 진 팀</b>, 팀 안에서는 <b>급수가 낮은 사람부터</b>, 같은 급수면 연장자부터'],['실패','못 맞추면 <b>맨 뒤로</b> (진 팀 차례가 끝난 뒤), 맞출 때까지 계속'],['상품','라면, 셔틀콕, 라켓, 음료, 계란, 햇반 등']],
  vid:null,hud:'경기이사가 셔틀콕을 올려줘요'}
 ];
-const fresh=()=>({stage:0,names:['총무팀','회장팀'],s1:[0,0],s2:{sc:[0,0],cur:[0,0],h:[]},s3:[[0,0,0,0,0],[0,0,0,0,0]],s4:{win:null,q:[],done:[],m:{}}});
+const fresh=()=>({stage:0,names:['총무팀','회장팀'],s1:[0,0],s2:{sc:[0,0],cur:[0,0],h:[]},s3:[[0,0,0,0],[0,0,0,0]],s4:{win:null,q:[],done:[],m:{}}});
 let st=fresh();
 const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const $=id=>document.getElementById(id);
@@ -338,7 +338,7 @@ function board(){
   h+=`<p class="note">득점한 조는 빠지고 다음 조가 들어와요 · 실점한 조는 남아요 <button class="undo" data-act="m2u"${x.h.length?'':' disabled'}>되돌리기</button></p>`;
   if(x.sc[0]>=12||x.sc[1]>=12)h+=`<div class="banner">${x.sc[0]>=12?a:b} 승리!</div>`}
  if(i===2){const c=st.s3.map(r=>r.reduce((s,v)=>s+v,0));
-  st.s3.forEach((row,t)=>{h+=`<div class="prow"><div class="tm ${t?'b':'a'}"><span>${t?b:a}</span><span>성공 ${c[t]}/5</span></div><div class="pairs">${row.map((v,j)=>`<button class="pair ${t?'b':'a'}${v?' ok':''}" data-act="c" data-t="${t}" data-i="${j}" aria-pressed="${!!v}">${j+1}조<br>${v?'성공!':'도전 전'}</button>`).join('')}</div></div>`});
+  st.s3.forEach((row,t)=>{h+=`<div class="prow"><div class="tm ${t?'b':'a'}"><span>${t?b:a}</span><span>성공 ${c[t]}/4</span></div><div class="pairs">${row.map((v,j)=>`<button class="pair ${t?'b':'a'}${v?' ok':''}" data-act="c" data-t="${t}" data-i="${j}" aria-pressed="${!!v}">${j+1}조<br>${v?'성공!':'도전 전'}</button>`).join('')}</div></div>`});
   h+=c[0]===c[1]?`<p class="note">성공한 조를 눌러 표시하세요. 지금은 동점이에요.</p>`:`<div class="banner">${c[0]>c[1]?a:b} 앞서는 중 (${Math.max(...c)} : ${Math.min(...c)})</div>`}
  if(i===3)h+=prizeUI();
  $('board').innerHTML=h}
@@ -379,7 +379,7 @@ function fsRender(){const o=$('fs');if(o.hidden)return;const[a,b]=st.names.map(e
  const val=t=>i===0?st.s1[t]:i===1?st.s2.sc[t]:st.s3[t].reduce((x,y)=>x+y,0);
  const half=t=>{const nm=t?b:a,act=i?'m2':'p';let inner;const rot=i===1?`<div class="fsrot">코트 ${st.s2.cur[t]+1}조 · 다음 ${(st.s2.cur[t]+1)%4+1}조</div>`:'';
   if(i<2)inner=`<button class="fsplus" data-act="${act}" data-r="${fsRow}" data-t="${t}" data-d="1" aria-label="${nm} 1점 더하기"><span class="fsn">${val(t)}</span><span class="fsh">탭하면 +1</span></button>${i===1?'<button class="fsminus" data-act="m2u">되돌리기</button>':`<button class="fsminus" data-act="${act}" data-t="${t}" data-d="-1">− 1점 빼기</button>`}`;
-  else inner=`<div class="fs3"><div class="fsn">${val(t)}<small>/5</small></div></div><div class="fspairs">${st.s3[t].map((v,j)=>`<button class="pair${v?' ok':''}" data-act="c" data-t="${t}" data-i="${j}" aria-pressed="${!!v}">${j+1}조<br>${v?'성공!':'도전'}</button>`).join('')}</div>`;
+  else inner=`<div class="fs3"><div class="fsn">${val(t)}<small>/4</small></div></div><div class="fspairs">${st.s3[t].map((v,j)=>`<button class="pair${v?' ok':''}" data-act="c" data-t="${t}" data-i="${j}" aria-pressed="${!!v}">${j+1}조<br>${v?'성공!':'도전'}</button>`).join('')}</div>`;
   return `<div class="fshalf ${t?'b':'a'}"><div class="fsname">${nm}</div>${rot}${inner}</div>`};
  h+=`<div class="fsmain">${half(0)}<div class="fsvs">VS</div>${half(1)}</div>`;
  if(i<2){const tg=i?12:21,x=val(0),y=val(1);if(x>=tg||y>=tg)h+=`<div class="fswin">${x>=tg?a:b} 승리!</div>`}
@@ -398,7 +398,7 @@ document.addEventListener('click',e=>{
  if(d.act==='pz'){sel=sel===d.p?null:d.p}
  if(d.act==='ok'||d.act==='miss'){const s4=st.s4;if(s4.q.length){hist.push(JSON.stringify(s4));const n=s4.q.shift();if(d.act==='ok'){s4.done.push({n,p:sel||''});sel=null}else{s4.m[n]=(s4.m[n]||0)+1;s4.q.push(n)}}}
  if(d.act==='undo'&&hist.length){st.s4=JSON.parse(hist.pop());sel=null}
- if(d.act==='reset'){if(st.stage===3){st.s4=fresh().s4;hist=[];sel=null}if(st.stage===0)st.s1=[0,0];if(st.stage===1)st.s2=fresh().s2;if(st.stage===2)st.s3=[[0,0,0,0,0],[0,0,0,0,0]]}
+ if(d.act==='reset'){if(st.stage===3){st.s4=fresh().s4;hist=[];sel=null}if(st.stage===0)st.s1=[0,0];if(st.stage===1)st.s2=fresh().s2;if(st.stage===2)st.s3=fresh().s3}
  if(d.act==='p')st.s1[t]=Math.max(0,Math.min(21,st.s1[t]+ +d.d));
  if(d.act==='m2'){const x=st.s2;if(x.sc[0]<12&&x.sc[1]<12){x.sc[t]++;x.cur[t]=(x.cur[t]+1)%4;x.h.push(t)}}
  if(d.act==='m2u'&&st.s2.h.length){const x=st.s2,u=x.h.pop();x.sc[u]--;x.cur[u]=(x.cur[u]+3)%4}
@@ -412,7 +412,7 @@ addEventListener('hashchange',()=>{const i=S.findIndex(s=>'#'+s.id===location.ha
 function start(data){
  try{const sv=JSON.parse(localStorage.getItem('buseong-match-v2')||'null');if(sv&&sv.s3)st=Object.assign(fresh(),sv)}catch(e){}
  if(data&&data.s3)st=Object.assign(fresh(),data);
- if(!st.s2||!st.s2.sc)st.s2=fresh().s2;if(!st.s4||!st.s4.q)st.s4=fresh().s4;if(st.stage>3)st.stage=0;
+ if(!st.s2||!st.s2.sc)st.s2=fresh().s2;if(!st.s3||st.s3.length!==2||st.s3[0].length!==4)st.s3=st.s3&&st.s3.length===2?st.s3.map(r=>[...r,0,0,0,0].slice(0,4)):fresh().s3;if(!st.s4||!st.s4.q)st.s4=fresh().s4;if(st.stage>3)st.stage=0;
  const hi=S.findIndex(s=>'#'+s.id===location.hash);if(hi>=0)st.stage=hi;
  $('nameA').value=st.names[0];$('nameB').value=st.names[1];
  roster();setStage(st.stage);requestAnimationFrame(frame);
