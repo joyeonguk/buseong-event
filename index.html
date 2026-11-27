@@ -273,7 +273,7 @@ const P2A=[{x:540,y:305,n:1},{x:150,y:470,n:2},{x:150,y:140,n:3}],P2B=[{x:800,y:
 const P3A=[{x:420,y:305,n:'A'}],P3B=[{x:920,y:305,n:'B'}];
 const P4=[{x:330,y:305,n:'도전',fs:30}],F4=[{x:1270,y:305,n:'이사',fs:30,c:'#d8f34a'}];
 const PL=[[Z1A,Z1B],[P2A,P2B],[P3A,P3B],[P4,F4]];
-const PZ=[{x:780,y:110,l:'라면',c:'#ffd24a'},{x:960,y:80,l:'셔틀콕',c:'#f6f4ea'},{x:1120,y:140,l:'라켓',c:'#9be38a'},{x:800,y:300,l:'음료',c:'#7fd6ff'},{x:1010,y:270,l:'계란',c:'#fff1c9'},{x:790,y:500,l:'햇반',c:'#f6f4ea'},{x:980,y:470,l:'라면',c:'#ffd24a'},{x:1140,y:510,l:'음료',c:'#7fd6ff'},{x:1150,y:330,l:'계란',c:'#fff1c9'}];
+const PZ=[{x:780,y:110,l:'라면',c:'#ffd24a'},{x:960,y:80,l:'셔틀콕',c:'#f6f4ea'},{x:1120,y:140,l:'라켓',c:'#9be38a'},{x:800,y:300,l:'음료',c:'#7fd6ff'},{x:1010,y:270,l:'계란',c:'#fff1c9'},{x:790,y:500,l:'햇반',c:'#f6f4ea'},{x:980,y:470,l:'셔틀콕',c:'#f6f4ea'},{x:1140,y:510,l:'음료',c:'#7fd6ff'},{x:1150,y:330,l:'계란',c:'#fff1c9'}];
 const EMPTY=[{x:890,y:195},{x:1065,y:385},{x:890,y:395},{x:900,y:580}];
 const W='#f6f4ea';
 const mq=matchMedia('(max-width:600px)');let vert=mq.matches;
@@ -343,7 +343,7 @@ const SPARK='<svg class="spark" viewBox="0 0 30 30" aria-hidden="true"><path d="
 function roster(){const m=t=>R.filter(r=>r[1]===t);
  $('vsbar').innerHTML=[0,1].map(t=>`<div class="vside ${t?'b':'a'}"><span class="fw">${CHIBI(FACE[t],t)}</span><div><b>${TN[t]}</b><small>${m(t).length}명 출전</small></div></div>`).join('')+'<div class="vsx" aria-hidden="true">VS</div>';
  $('rteams').innerHTML=[0,1].map(t=>`<div class="team ${t?'b':'a'}"><h3>${TN[t]} 라인업</h3><ul class="mem">${m(t).map((r,j)=>`<li style="--i:${j+t*10}"><span class="num">${j+1}</span><b>${r[0]}</b></li>`).join('')}</ul></div>`).join('')}
-const ORD=[['오종선','이은효','정원우','이도연','이서연','조성식','권혁준','손주완','하재청','최영권','한지백','안정','장윤미'],['이재승','김달식','김경리','이정리','김대훈','염창훈','박현숙','이도성','김찬영','심재홍','신정아','조영욱','이지은']];
+const ORD=[['오종선','이은효','정원우','이도연','이서연','조성식','한지백','권혁준','손주완','장윤미','하재청','안정','최영권'],['신정아','이재승','김달식','김경리','이정리','김대훈','염창훈','박현숙','이지은','이도성','조영욱','김찬영','심재홍']];
 const PRIZES=['라면','셔틀콕','라켓','음료','계란','햇반','기타'];
 let hist=[],sel=null;
 function prizes(){return PZ.map((z,k)=>`<g class="tok" id="pz${k}" transform="translate(${z.x} ${z.y})"><rect x="-42" y="-36" width="96" height="96" rx="18" fill="#000" opacity=".22"/><g class="body"><rect x="-48" y="-48" width="96" height="96" rx="18" fill="${z.c}" stroke="#0f2e22" stroke-width="5"/><text y="11"${vert?' transform="rotate(-90)"':''} text-anchor="middle" font-size="${z.l.length>2?26:32}" font-weight="900" font-family="Noto Sans KR, Arial, sans-serif" fill="#0f2e22">${z.l}</text></g></g>`).join('')}
