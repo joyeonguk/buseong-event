@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>부성클럽 경품 추첨</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;700;900&display=swap">
+<style>
+/* VOICE occasion: the lucky draw at the end of a club party
+   IDEA a game-show prize wheel on the same gym-green stage as the event page
+   PICTURE one big wheel of every member's name in team colours, a lime pointer, a winner card with confetti
+   COLOUR deep court green ground, sky (총무팀) and coral (회장팀) slices, lime accent
+   TYPE Black Han Sans display + Noto Sans KR text
+   LAYOUT laptop: wheel left, controls and winners right; phone: title, wheel, spin button, then lists */
+:root{color-scheme:dark;--bg:#0f2e22;--panel:#16402f;--panel2:#1c4d39;--ink:#f4f1e8;--soft:#b9d3c4;--lime:#d8f34a;--a:#5cc8ff;--b:#ff6a4d;--line:rgba(244,241,232,.16)}
+:root[data-theme=light],:root[data-theme=dark]{color-scheme:dark}
+*{box-sizing:border-box;min-width:0}
+html,body{margin:0;background:var(--bg)}
+body{color:var(--ink);font:16px/1.55 'Noto Sans KR',Arial,sans-serif;overflow-x:clip;word-break:keep-all}
+h1,h2,h3{font-family:'Black Han Sans','Noto Sans KR',Arial,sans-serif;font-weight:400;margin:0}
+.wrap{max-width:1240px;margin:0 auto;padding:0 max(16px,4vw)}
+header{padding:22px 0 14px;display:flex;justify-content:space-between;align-items:end;gap:12px;flex-wrap:wrap}
+h1{font-size:clamp(32px,5vw,52px);line-height:1.05}
+h1 span{color:var(--lime)}
+.back{color:var(--soft);font-size:14px;text-decoration:none;border:2px solid var(--line);border-radius:12px;padding:8px 12px}
+.back:hover{color:var(--ink);border-color:var(--ink)}
+main{display:grid;grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:22px;align-items:start;padding-bottom:30px}
+.stage{display:grid;justify-items:center;gap:16px}
+.wheelbox{position:relative;width:min(100%,640px,72svh);aspect-ratio:1}
+.wheelbox canvas{position:absolute;inset:0;width:100%;height:100%;border-radius:50%;box-shadow:0 0 0 10px #3b2614,0 0 0 16px #0a2219,0 22px 0 6px #0a2219}
+.pointer{position:absolute;left:50%;top:-22px;transform:translateX(-50%);width:54px;height:64px;z-index:2;filter:drop-shadow(0 4px 0 #0a2219)}
+.hub{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:22%;aspect-ratio:1;border-radius:50%;background:var(--lime);border:6px solid var(--bg);display:grid;place-items:center;color:var(--bg);font:400 clamp(16px,3vw,28px)/1 'Black Han Sans','Noto Sans KR',Arial,sans-serif;z-index:2;text-align:center}
+.spin{all:unset;cursor:pointer;background:var(--lime);color:var(--bg);font:400 clamp(26px,4vw,40px)/1 'Black Han Sans','Noto Sans KR',Arial,sans-serif;padding:18px 54px;border-radius:999px;box-shadow:0 8px 0 #8fa52a;transition:transform .1s}
+.spin:active{transform:translateY(4px);box-shadow:0 4px 0 #8fa52a}
+.spin:focus-visible{outline:4px solid var(--ink);outline-offset:4px}
+.spin[disabled]{opacity:.5;cursor:default}
+.side{display:grid;gap:16px}
+.card{background:var(--panel);border:2px solid var(--line);border-radius:20px;padding:18px 20px}
+.card h2{font-size:26px;line-height:1.1;margin-bottom:10px}
+label.f{display:block;font-weight:700;font-size:14px;color:var(--soft);margin-bottom:6px}
+input[type=text]{width:100%;font:700 16px 'Noto Sans KR',Arial,sans-serif;color:var(--ink);background:var(--bg);border:2px solid var(--line);border-radius:12px;padding:10px 12px;min-height:46px}
+input[type=text]:focus{outline:none;border-color:var(--lime)}
+.presets{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.chipbtn{all:unset;cursor:pointer;padding:6px 12px;border-radius:999px;border:2px solid var(--line);font-size:14px;font-weight:700}
+.chipbtn:hover,.chipbtn:focus-visible{border-color:var(--lime)}
+.opts{display:flex;flex-wrap:wrap;gap:16px;margin-top:12px;font-size:15px}
+.opts label{display:flex;align-items:center;gap:8px;cursor:pointer}
+.opts input{width:20px;height:20px;accent-color:#d8f34a}
+.count{color:var(--soft);font-size:14px;margin:0 0 10px}
+.people{display:flex;flex-wrap:wrap;gap:6px}
+.p{all:unset;cursor:pointer;padding:5px 12px;border-radius:999px;font-size:14px;font-weight:700;color:var(--bg)}
+.p.a{background:var(--a)}.p.b{background:var(--b)}
+.p.off{background:transparent;color:var(--soft);text-decoration:line-through;box-shadow:inset 0 0 0 2px var(--line)}
+.p.won{background:transparent;color:var(--lime);box-shadow:inset 0 0 0 2px var(--lime)}
+.p:focus-visible{outline:3px solid var(--ink);outline-offset:2px}
+ol.wins{margin:0;padding-left:1.6em;display:grid;gap:6px}
+ol.wins li b{font-size:18px}
+ol.wins li span{color:var(--soft);font-size:14px}
+.empty{color:var(--soft);font-size:14px;margin:0}
+.row{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.row h2{margin:0}
+.link{all:unset;cursor:pointer;color:var(--soft);font-size:14px;text-decoration:underline}
+.link:hover,.link:focus-visible{color:var(--ink)}
+.modal{position:fixed;inset:0;z-index:40;background:rgba(6,20,14,.82);display:grid;place-items:center;padding:20px}
+.modal[hidden]{display:none}
+.win{background:var(--lime);color:var(--bg);border-radius:28px;padding:30px 34px;text-align:center;width:min(560px,100%);border:6px solid var(--bg);box-shadow:0 0 0 6px var(--lime);animation:pop .55s cubic-bezier(.2,1.6,.4,1)}
+.win small{display:block;font-weight:900;font-size:18px}
+.win .nm{font:400 clamp(64px,16vw,130px)/1.05 'Black Han Sans','Noto Sans KR',Arial,sans-serif;margin:6px 0}
+.win .tm{display:inline-block;font-weight:900;padding:4px 16px;border-radius:999px;color:var(--bg);font-size:18px}
+.win .tm.a{background:var(--a)}.win .tm.b{background:var(--b)}
+.win .pz{font-weight:900;font-size:22px;margin-top:10px}
+.win button{all:unset;cursor:pointer;margin-top:18px;background:var(--bg);color:var(--ink);font-weight:900;font-size:18px;padding:12px 30px;border-radius:999px}
+.win button:focus-visible{outline:4px solid var(--bg);outline-offset:3px}
+#confetti{position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:41}
+@keyframes pop{from{transform:scale(.6);opacity:0}}
+@media(max-width:900px){main{grid-template-columns:minmax(0,1fr)}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+<h1>부성클럽 <span>경품 추첨</span></h1>
+<a class="back" href="./">← 이벤트 매치로</a>
+</header>
+<main>
+<section class="stage" aria-label="추첨 룰렛">
+<div class="wheelbox">
+<svg class="pointer" viewBox="0 0 54 64" aria-hidden="true"><path d="M4 4 H50 L27 60 Z" fill="#d8f34a" stroke="#0f2e22" stroke-width="5" stroke-linejoin="round"/></svg>
+<canvas id="wheel" role="img" aria-label="참가자 이름이 적힌 룰렛"></canvas>
+<div class="hub" id="hub">추첨</div>
+</div>
+<button class="spin" id="spin">룰렛 돌리기</button>
+</section>
+<div class="side">
+<div class="card">
+<h2>이번 경품</h2>
+<label class="f" for="prize">경품 이름 (선택)</label>
+<input type="text" id="prize" maxlength="20" placeholder="예: 라켓">
+<div class="presets" id="presets"></div>
+<div class="opts">
+<label><input type="checkbox" id="exclude" checked> 당첨자는 다음 추첨에서 빼기</label>
+<label><input type="checkbox" id="sound" checked> 효과음</label>
+</div>
+</div>
+<div class="card">
+<div class="row"><h2>당첨자</h2><button class="link" id="clearWins">당첨 기록 지우기</button></div>
+<ol class="wins" id="wins"></ol>
+</div>
+<div class="card">
+<div class="row"><h2>추첨 대상</h2><button class="link" id="allOn">전원 다시 포함</button></div>
+<p class="count" id="count"></p>
+<div class="people" id="people"></div>
+</div>
+</div>
+</main>
+</div>
+<div class="modal" id="modal" hidden role="dialog" aria-modal="true" aria-labelledby="wname">
+<div class="win"><small>축하합니다!</small><div class="nm" id="wname"></div><span class="tm" id="wteam"></span><div class="pz" id="wprize"></div><button id="ok">확인</button></div>
+</div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<script>
+{
+const ROSTER=[['오종선',0],['이은효',0],['이서연',0],['조성식',0],['이도연',0],['정원우',0],['최영권',0],['하재청',0],['손주완',0],['권혁준',0],['한지백',0],['안정',0],['장윤미',0],['김기현',0],
+['이재승',1],['김경리',1],['김달식',1],['심재홍',1],['김찬영',1],['이도성',1],['박현숙',1],['염창훈',1],['김대훈',1],['이정리',1],['신정아',1],['조영욱',1],['이지은',1]];
+const TN=['총무팀','회장팀'],PRESETS=['라켓','셔틀콕','라면','음료','계란','햇반'];
+const C=[['#5cc8ff','#8fdcff'],['#ff6a4d','#ff9a83']];
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+let st={off:[],wins:[]};
+try{const v=JSON.parse(localStorage.getItem('buseong-draw')||'null');if(v&&Array.isArray(v.off)&&Array.isArray(v.wins))st=v}catch(e){}
+const save=()=>{try{localStorage.setItem('buseong-draw',JSON.stringify(st))}catch(e){}};
+const won=n=>st.wins.some(w=>w.n===n);
+const pool=()=>{const ex=$('exclude').checked;const p=ROSTER.filter(([n])=>!st.off.includes(n)&&!(ex&&won(n)));
+ return p};
+let cur=[],rot=0,spinning=false;
+const cv=$('wheel'),ctx=cv.getContext('2d');
+function mix(list){const a=list.filter(r=>r[1]===0),b=list.filter(r=>r[1]===1),o=[];while(a.length||b.length){if(a.length)o.push(a.shift());if(b.length)o.push(b.shift())}return o}
+function draw(){
+ const r=cv.getBoundingClientRect(),d=devicePixelRatio||1,S=Math.round(r.width*d);if(!S)return;
+ if(cv.width!==S){cv.width=S;cv.height=S}
+ ctx.setTransform(1,0,0,1,0,0);ctx.clearRect(0,0,S,S);
+ const R=S/2,n=cur.length;ctx.translate(R,R);
+ if(!n){ctx.fillStyle='#16402f';ctx.beginPath();ctx.arc(0,0,R,0,7);ctx.fill();return}
+ const seg=Math.PI*2/n;
+ cur.forEach(([nm,t],i)=>{const a0=-Math.PI/2+i*seg;ctx.beginPath();ctx.moveTo(0,0);ctx.arc(0,0,R,a0,a0+seg);ctx.closePath();ctx.fillStyle=C[t][Math.floor(i/2)%2];ctx.fill();ctx.strokeStyle='#0f2e22';ctx.lineWidth=Math.max(2,S/300);ctx.stroke();
+  ctx.save();ctx.rotate(a0+seg/2);ctx.fillStyle='#0f2e22';const fs=Math.min(R*.085,Math.max(12*d,R*seg*.55));ctx.font=`900 ${fs}px 'Noto Sans KR', Arial, sans-serif`;ctx.textAlign='right';ctx.textBaseline='middle';ctx.fillText(nm,R*.92,0);ctx.restore()});
+ ctx.beginPath();ctx.arc(0,0,R-1,0,7);ctx.lineWidth=Math.max(4,S/120);ctx.strokeStyle='#0f2e22';ctx.stroke();
+}
+const setRot=()=>{cv.style.transform=`rotate(${rot}deg)`};
+function people(){
+ $('people').innerHTML=ROSTER.map(([n,t])=>{const off=st.off.includes(n),w=won(n);return `<button class="p ${t?'b':'a'}${off?' off':''}${w&&!off?' won':''}" data-n="${esc(n)}" aria-pressed="${!off}" title="${off?'눌러서 다시 포함':'눌러서 빼기(불참 등)'}">${esc(n)}${w?' ★':''}</button>`}).join('');
+ $('count').textContent=`룰렛에 ${cur.length}명 · 이름을 누르면 불참자를 빼거나 다시 넣어요${$('exclude').checked?' · ★ 당첨자는 자동 제외':''}`;
+}
+function wins(){$('wins').innerHTML=st.wins.length?st.wins.map(w=>`<li><b>${esc(w.n)}</b> <span>${TN[w.t]}${w.p?' · '+esc(w.p):''}</span></li>`).join(''):'<p class="empty">아직 당첨자가 없어요.</p>'}
+function refresh(){if(spinning)return;cur=mix(pool());rot=0;setRot();draw();people();wins();$('spin').disabled=!cur.length;$('hub').textContent=cur.length?'추첨':'대상 없음'}
+let ac=null;function tick(){if(!$('sound').checked)return;try{ac=ac||new (window.AudioContext||window.webkitAudioContext)();const o=ac.createOscillator(),g=ac.createGain();o.type='square';o.frequency.value=900;g.gain.setValueAtTime(.08,ac.currentTime);g.gain.exponentialRampToValueAtTime(.001,ac.currentTime+.05);o.connect(g).connect(ac.destination);o.start();o.stop(ac.currentTime+.06)}catch(e){}}
+function fanfare(){if(!$('sound').checked||!ac)return;try{[523,659,784,1047].forEach((f,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='triangle';o.frequency.value=f;const t0=ac.currentTime+i*.12;g.gain.setValueAtTime(.0001,t0);g.gain.exponentialRampToValueAtTime(.18,t0+.02);g.gain.exponentialRampToValueAtTime(.001,t0+.4);o.connect(g).connect(ac.destination);o.start(t0);o.stop(t0+.45)})}catch(e){}}
+const rand=()=>{const u=new Uint32Array(1);crypto.getRandomValues(u);return u[0]/4294967296};
+function spin(){
+ if(spinning||!cur.length)return;spinning=true;$('spin').disabled=true;tick();
+ const n=cur.length,seg=360/n,k=Math.floor(rand()*n),off=seg*(.18+rand()*.64);
+ const target=(360-(k*seg+off)%360)%360,start=rot,base=start-((start%360)+360)%360;
+ let end=base+360*(7+Math.floor(rand()*3))+target;if(end<start+360*6)end+=360;
+ const still=matchMedia('(prefers-reduced-motion: reduce)').matches,dur=still?300:5600+rand()*900,t0=performance.now();let last=-1;
+ const idxAt=r=>Math.floor((((360-r%360)%360)+360)%360/seg)%n;
+ const step=now=>{const t=Math.min(1,(now-t0)/dur),e=1-Math.pow(1-t,4);rot=start+(end-start)*e;setRot();const i=idxAt(rot);if(i!==last){last=i;if(t<1)tick();$('hub').textContent=cur[i][0]}
+  if(t<1)requestAnimationFrame(step);else done(cur[idxAt(rot)])};
+ requestAnimationFrame(step);
+}
+function done([n,t]){
+ const p=$('prize').value.trim();st.wins.push({n,t,p});save();
+ $('wname').textContent=n;$('wteam').textContent=TN[t];$('wteam').className='tm '+(t?'b':'a');$('wprize').textContent=p?`경품: ${p}`:'';
+ $('modal').hidden=false;$('ok').focus();fanfare();confetti();wins();
+}
+function close(){$('modal').hidden=true;spinning=false;refresh();$('spin').focus()}
+function confetti(){
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ const c=$('confetti'),x=c.getContext('2d'),W=c.width=innerWidth,H=c.height=innerHeight,cols=['#d8f34a','#5cc8ff','#ff6a4d','#f4f1e8','#ffd24a'];
+ const ps=Array.from({length:160},()=>({x:W/2,y:H*.45,vx:(rand()-.5)*16,vy:-rand()*16-4,s:6+rand()*8,r:rand()*6,vr:(rand()-.5)*.4,c:cols[Math.floor(rand()*cols.length)]}));
+ const t0=performance.now();const f=now=>{x.clearRect(0,0,W,H);ps.forEach(p=>{p.vy+=.4;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore()});if(now-t0<3200)requestAnimationFrame(f);else x.clearRect(0,0,W,H)};requestAnimationFrame(f);
+}
+$('presets').innerHTML=PRESETS.map(p=>`<button class="chipbtn" data-p="${p}">${p}</button>`).join('');
+$('presets').addEventListener('click',e=>{const b=e.target.closest('[data-p]');if(b)$('prize').value=b.dataset.p});
+$('people').addEventListener('click',e=>{const b=e.target.closest('[data-n]');if(!b||spinning)return;const n=b.dataset.n;st.off=st.off.includes(n)?st.off.filter(x=>x!==n):[...st.off,n];save();refresh()});
+$('spin').addEventListener('click',spin);
+$('ok').addEventListener('click',close);
+$('modal').addEventListener('click',e=>{if(e.target===$('modal'))close()});
+document.addEventListener('keydown',e=>{if(!$('modal').hidden&&(e.key==='Escape'||e.key==='Enter')){e.preventDefault();close()}else if(e.key===' '&&$('modal').hidden&&e.target===document.body){e.preventDefault();spin()}});
+$('exclude').addEventListener('change',refresh);
+$('clearWins').addEventListener('click',()=>{if(spinning)return;st.wins=[];save();refresh()});
+$('allOn').addEventListener('click',()=>{if(spinning)return;st.off=[];save();refresh()});
+const ro=new ResizeObserver(()=>draw());ro.observe(cv);
+refresh();
+}
+</script>
+</body>
+</html>
